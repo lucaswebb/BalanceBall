@@ -8,3 +8,15 @@ Materials:
 1 Arduino
 1 plastic colored platform
 Wood to hold the platform and camera
+
+Timeline:
+
+Weekend of the 13th: Research camera detection, perhaps start writing code that will be able to detect the ball.  Plan the
+design of the struture holding the platform and camera and determine how much wood and nails we will need.
+Week of the 15th: Build the platform (including the motors to move it) and mount it and the camera on the wooden structure.  Finish
+up the ball detection code.
+Weekend of the 20th: Make code to tilt the platform based on where the ball is.
+Week of the 22nd: Make final adjustments and test.
+
+If there is extra time, it would also be cool to make an extra feature where the user can determine where the ball should be balanced.
+For example, they can click on the corner of the platform, and it will move the ball there and keep it there.
