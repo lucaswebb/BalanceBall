@@ -1,4 +1,10 @@
 Balance Ball Proposal
 
-Touchscreen? could also use camera
-2 motors
+Goal: Create a platform that balances a ball using data from a camera above the platform.
+
+Materials:
+2 servo motors
+1 small camera
+1 Arduino
+1 plastic colored platform
+Wood to hold the platform and camera
