@@ -1,0 +1,16 @@
+Camera Tracking:
+
+We will use a small camera to track the location of a ball.
+The program will output coordinates and we can do whatever we want with them.
+One example would be to have a GUI that shows the ball.
+
+Materials:
+Camera
+Ball
+Some sort of stand for camera (Balsa Wood)
+
+Timeline:
+Weekend of the 13th: Research cameras, start writing code that will be able to detect the ball. Plan the camera stand.
+Week of the 15th: Finish the code for tracking.
+Weekend of the 20th: Mount camera and finalize code.
+Week of the 22nd: Make final adjustments and test.
