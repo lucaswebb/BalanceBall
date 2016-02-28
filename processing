@@ -44,7 +44,7 @@ void setup() {
 void draw() {
   if (video.available()) {
     video.read();
-    image(video, 0, 0, width, height); // Draw the webcam video onto the screen
+    image(video, 0, 0, video.width, video.height); // Draw the webcam video onto the screen
     float blackestValue = 0; // Brightness of the brightest video pixel
     // Search for the brightest pixel: For each row of pixels in the video image and
     // for each pixel in the yth row, compute each pixel's index in the video
