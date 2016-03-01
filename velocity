@@ -1,3 +1,16 @@
+int bxprev;
+int byprev;
+
+float vx;
+float vy;
+
+float vxavg;
+float vyavg;
+
+int count = 0;
+
+
+
 //velocity
     vx = (bxprev - blackestX)/0.033;
     vy = (byprev - blackestY)/0.033;
