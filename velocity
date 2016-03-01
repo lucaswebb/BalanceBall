@@ -1,0 +1,16 @@
+//velocity
+    vx = (bxprev - blackestX)/0.033;
+    vy = (byprev - blackestY)/0.033;
+    bxprev = blackestX;
+    byprev = blackestY;
+    
+    vxavg = (vxavg + vx)/2;
+    vyavg = (vyavg + vy)/2;
+    
+    if(count>=10){
+       vxavg = vx;
+       vyavg = vy;
+       count = 0;
+    }
+    
+    rect(blackestX, blackestY, -vxavg, -vyavg);
