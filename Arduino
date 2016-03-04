@@ -1,0 +1,31 @@
+#include <Servo.h>
+
+Servo xServo;
+Servo yServo;
+
+int currentValue = 0;
+int values[] = {0,0};
+
+void setup() {
+  xServo.attach(9);
+  yServo.attach(10);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+   if(Serial.available()){
+    int incomingValue = Serial.read();
+    
+    values[currentValue] = incomingValue;
+
+    currentValue++;
+    if(currentValue > 1){
+      currentValue = 0;
+    }
+   }
+    
+    xServo.write(180-values[0]);
+    yServo.write(180-values[1]);
+    delay(1);
+}
