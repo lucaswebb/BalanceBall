@@ -1,0 +1,162 @@
+//All variable names starting with black, should really start with blue
+
+import processing.video.*;
+import processing.serial.*;
+
+Capture video;
+Serial myPort;
+
+int blackestX;
+int blackestY;
+
+int xDegree;
+int yDegree;
+
+int bxprev;
+int byprev;
+
+float vx;
+float vy;
+
+float vxavg;
+float vyavg;
+
+int count = 0;
+
+void setup() {
+  size(800, 600);
+  // Uses the default video input, see the reference if this causes an error
+  
+  //println(Capture.list());//prints out available cameras
+  
+  String[] cameras = Capture.list();
+  
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+    println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      println(cameras[i]);
+    }
+  }
+    
+  video = new Capture(this, cameras[18]);
+  video.start();  
+  noStroke();
+  smooth();
+  
+  String portName = Serial.list()[3]; //change the 0 to a 1 or 2 etc. to match your port
+  myPort = new Serial(this, portName, 9600);
+  
+  blackestX = 400; // X-coordinate of the brightest video pixel
+  blackestY = 300; // Y-coordinate of the brightest video pixel
+}
+
+void draw() {
+  if (video.available()) {
+    video.read();
+    image(video, 0, 0, video.width, video.height); // Draw the webcam video onto the screen
+    float blackestValue = -255*2; // Brightness of the brightest video pixel
+    // Search for the brightest pixel: For each row of pixels in the video image and
+    // for each pixel in the yth row, compute each pixel's index in the video
+    video.loadPixels();
+    int index = 0;
+    for (int y = 0; y < video.height; y++) {
+      for (int x = 0; x < video.width; x++) {
+        // Get the color stored in the pixel
+        int pixelColor = video.pixels[index];
+
+        int r = (pixelColor >> 16) & 0xff;
+        int g = (pixelColor >> 8) & 0xff;
+        int b = pixelColor & 0xff;
+        
+        int blackness = b-g-r;
+        
+        if(blackness > blackestValue){
+          blackestValue = blackness;
+          blackestX = x;
+          blackestY = y;
+        }          
+        index++;
+      }
+    }
+    
+    //smoothing
+    index = 0;
+        int totalx = 0;
+        int totaly = 0;
+        int num = 0;
+    for (int y = 0; y < video.height; y++) {
+      for (int x = 0; x < video.width; x++) {
+        int pixelColor = video.pixels[index];
+        
+        int r = (pixelColor >> 16) & 0xff;
+        int g = (pixelColor >> 8) & 0xff;
+        int b = pixelColor & 0xff;
+        if (b-g-r > blackestValue-40) {
+          totalx += x;
+          totaly += y;
+          num++;
+        }
+        
+        index++;
+      }
+    }
+    blackestX = totalx/num;
+    blackestY = totaly/num;
+    
+    // Draw a large, white circle at the bluest pixel
+    //fill(255, 204, 0, 128);
+    ellipse(blackestX, blackestY, 100, 100);
+    
+    //velocity
+    vx = (bxprev - blackestX)/0.033;
+    vy = (byprev - blackestY)/0.033;
+    bxprev = blackestX;
+    byprev = blackestY;
+    
+    vxavg = (vxavg + vx)/2;
+    vyavg = (vyavg + vy)/2;
+    
+    if(count>=10){
+       vxavg = vx;
+       vyavg = vy;
+       count = 0;
+    }
+    
+    rect(blackestX, blackestY, -vxavg, -vyavg);
+    
+    //xDegree
+    xDegree = 180-(int)map(vxavg,-1000,1000,15,165)-10;
+
+    if(blackestX < 390){
+      xDegree -= 10;
+    } else if (blackestX > 410){
+      xDegree += 10;
+    }
+    
+    //yDegree
+    yDegree = 180-(int)map(vyavg,-1000,1000,15,165)-5;
+    
+    if(blackestY < 290){
+      yDegree -= 10;
+    } else if (blackestY > 310){
+      yDegree += 10;
+    }
+    
+    
+    
+    
+    //int xDegree = (int)map((int)(((double)blackestX/video.width)*180),0,180,15,165);
+    //int yDegree = (int)map((int)(((double)blackestY/video.height)*180),0,180,15,165);
+    
+    System.out.println(vxavg);
+    
+    byte out[] = new byte[2];
+    out[0] = byte(xDegree);
+    out[1] = byte(yDegree);
+    myPort.write(out);
+    delay(10);
+  }
+}
